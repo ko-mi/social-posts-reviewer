@@ -1,10 +1,12 @@
 import { SocialPost, Platform } from './types';
 
-const VALID_PLATFORMS: Platform[] = ['linkedin', 'twitter', 'facebook', 'instagram'];
+const VALID_PLATFORMS: Platform[] = ['linkedin', 'linkedin-ad', 'twitter', 'facebook', 'instagram', 'google-ad'];
 
 function parsePlatform(raw: string): Platform {
   const lower = raw.toLowerCase().trim();
   if (lower === 'x' || lower === 'x (twitter)') return 'twitter';
+  if (lower === 'linkedin ad' || lower === 'linkedin-ad' || lower === 'li ad') return 'linkedin-ad';
+  if (lower === 'google ad' || lower === 'google-ad' || lower === 'google ads' || lower === 'search ad') return 'google-ad';
   if (VALID_PLATFORMS.includes(lower as Platform)) return lower as Platform;
   return 'linkedin';
 }
@@ -75,6 +77,8 @@ export async function fetchSheetData(sheetId: string): Promise<SocialPost[]> {
         platform: parsePlatform(getCell(row, 'platform', 2)),
         variant: getCell(row, 'variant', 3) || 'A',
         text,
+        headline: getCell(row, 'headline', -1) || undefined,
+        ctaText: getCell(row, 'cta text', -1) || getCell(row, 'cta', -1) || undefined,
         imageUrl: getCell(row, 'image url', 5) || undefined,
         linkUrl: getCell(row, 'link url', 6) || undefined,
         scheduledDate: getCell(row, 'scheduled date', 7) || undefined,

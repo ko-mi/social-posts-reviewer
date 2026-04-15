@@ -8,13 +8,15 @@ interface Props {
   onChange: (platform: Platform) => void;
 }
 
-const PLATFORMS: Platform[] = ['linkedin', 'twitter', 'facebook', 'instagram'];
+const PLATFORMS: Platform[] = ['linkedin', 'linkedin-ad', 'twitter', 'facebook', 'instagram', 'google-ad'];
 
 const PLATFORM_ACCENT: Record<Platform, string> = {
   linkedin: 'border-[#0a66c2] text-[#0a66c2]',
+  'linkedin-ad': 'border-[#0a66c2] text-[#0a66c2]',
   twitter: 'border-[#0f1419] text-[#0f1419]',
   facebook: 'border-[#1877f2] text-[#1877f2]',
   instagram: 'border-[#e1306c] text-[#e1306c]',
+  'google-ad': 'border-[#4285f4] text-[#4285f4]',
 };
 
 export function PlatformSwitcher({ selected, originalPlatform, onChange }: Props) {

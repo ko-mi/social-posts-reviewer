@@ -13,9 +13,11 @@ interface Props {
 
 const PLATFORM_COLORS: Record<Platform, string> = {
   linkedin: 'bg-[#0a66c2]',
+  'linkedin-ad': 'bg-[#0a66c2]',
   twitter: 'bg-[#0f1419]',
   facebook: 'bg-[#1877f2]',
   instagram: 'bg-gradient-to-r from-[#f58529] via-[#dd2a7b] to-[#8134af]',
+  'google-ad': 'bg-[#4285f4]',
 };
 
 export function PostList({

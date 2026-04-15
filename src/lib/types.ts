@@ -1,4 +1,4 @@
-export type Platform = 'linkedin' | 'twitter' | 'facebook' | 'instagram';
+export type Platform = 'linkedin' | 'linkedin-ad' | 'twitter' | 'facebook' | 'instagram' | 'google-ad';
 
 export type ApprovalStatus = 'approved' | 'rejected' | null;
 
@@ -8,6 +8,8 @@ export interface SocialPost {
   platform: Platform;
   variant: string;
   text: string;
+  headline?: string;
+  ctaText?: string;
   imageUrl?: string;
   linkUrl?: string;
   scheduledDate?: string;
@@ -30,16 +32,20 @@ export interface Feedback {
 
 export const PLATFORM_LABELS: Record<Platform, string> = {
   linkedin: 'LinkedIn',
+  'linkedin-ad': 'LinkedIn Ad',
   twitter: '𝕏 (Twitter)',
   facebook: 'Facebook',
   instagram: 'Instagram',
+  'google-ad': 'Google Ad',
 };
 
 export const PLATFORM_ICONS: Record<Platform, string> = {
   linkedin: 'in',
+  'linkedin-ad': 'in',
   twitter: '𝕏',
   facebook: 'f',
   instagram: '📷',
+  'google-ad': 'G',
 };
 
 export function groupPosts(posts: SocialPost[]): PostGroup[] {

@@ -6,9 +6,11 @@ import { PostList } from './PostList';
 import { PlatformSwitcher } from './PlatformSwitcher';
 import { FeedbackPanel } from './FeedbackPanel';
 import { LinkedInPreview } from './previews/LinkedInPreview';
+import { LinkedInAdPreview } from './previews/LinkedInAdPreview';
 import { TwitterPreview } from './previews/TwitterPreview';
 import { FacebookPreview } from './previews/FacebookPreview';
 import { InstagramPreview } from './previews/InstagramPreview';
+import { GoogleAdPreview } from './previews/GoogleAdPreview';
 
 interface Props {
   posts: SocialPost[];
@@ -20,12 +22,16 @@ function PreviewRenderer({ platform, post }: { platform: Platform; post: SocialP
   switch (platform) {
     case 'linkedin':
       return <LinkedInPreview post={post} />;
+    case 'linkedin-ad':
+      return <LinkedInAdPreview post={post} />;
     case 'twitter':
       return <TwitterPreview post={post} />;
     case 'facebook':
       return <FacebookPreview post={post} />;
     case 'instagram':
       return <InstagramPreview post={post} />;
+    case 'google-ad':
+      return <GoogleAdPreview post={post} />;
   }
 }
 

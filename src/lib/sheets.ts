@@ -5,8 +5,8 @@ const VALID_PLATFORMS: Platform[] = ['linkedin', 'linkedin-ad', 'twitter', 'face
 function parsePlatform(raw: string): Platform {
   const lower = raw.toLowerCase().trim();
   if (lower === 'x' || lower === 'x (twitter)') return 'twitter';
-  if (lower === 'linkedin ad' || lower === 'linkedin-ad' || lower === 'li ad') return 'linkedin-ad';
-  if (lower === 'google ad' || lower === 'google-ad' || lower === 'google ads' || lower === 'search ad') return 'google-ad';
+  if (lower === 'linkedin ad' || lower === 'linkedin ads' || lower === 'linkedin-ad' || lower === 'li ad' || lower === 'li ads') return 'linkedin-ad';
+  if (lower === 'google ad' || lower === 'google ads' || lower === 'google-ad' || lower === 'search ad' || lower === 'search ads') return 'google-ad';
   if (VALID_PLATFORMS.includes(lower as Platform)) return lower as Platform;
   return 'linkedin';
 }

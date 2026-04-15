@@ -50,7 +50,7 @@ export function LinkedInAdPreview({ post }: Props) {
             </span>
           </div>
         ) : imageUrl ? (
-          <img src={imageUrl} alt="" className="w-full" />
+          <img src={imageUrl} alt="" className="w-full" referrerPolicy="no-referrer" />
         ) : (
           <div className="w-full h-[250px] bg-gradient-to-br from-blue-600 via-indigo-600 to-violet-600 flex items-center justify-center">
             <span className="text-white text-xl font-bold opacity-70">

@@ -51,7 +51,7 @@ export function LinkedInPreview({ post }: Props) {
               </span>
             </div>
           ) : (
-            <img src={imageUrl} alt="" className="w-full" />
+            <img src={imageUrl} alt="" className="w-full" referrerPolicy="no-referrer" />
           )}
         </div>
       )}

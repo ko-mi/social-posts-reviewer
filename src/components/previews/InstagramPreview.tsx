@@ -37,7 +37,7 @@ export function InstagramPreview({ post }: Props) {
             </span>
           </div>
         ) : imageUrl ? (
-          <img src={imageUrl} alt="" className="w-full aspect-square object-cover" />
+          <img src={imageUrl} alt="" className="w-full aspect-square object-cover" referrerPolicy="no-referrer" />
         ) : (
           <div className="w-full aspect-square bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
             <span className="text-gray-400 text-sm">Image preview</span>

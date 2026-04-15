@@ -52,13 +52,21 @@ export function PostList({
               const isSelected = key === selectedGroupKey;
 
               return (
-                <button
+                <div
                   key={key}
+                  role="button"
+                  tabIndex={0}
                   onClick={() => {
                     onSelectGroup(key);
                     onSelectVariant(group.variants[0]?.variant || 'A');
                   }}
-                  className={`w-full text-left px-4 py-3 border-b border-gray-100 transition-colors ${
+                  onKeyDown={e => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      onSelectGroup(key);
+                      onSelectVariant(group.variants[0]?.variant || 'A');
+                    }
+                  }}
+                  className={`w-full text-left px-4 py-3 border-b border-gray-100 transition-colors cursor-pointer ${
                     isSelected ? 'bg-white shadow-sm' : 'hover:bg-gray-100'
                   }`}
                 >
@@ -122,7 +130,7 @@ export function PostList({
                       ))}
                     </div>
                   )}
-                </button>
+                </div>
               );
             })}
           </div>

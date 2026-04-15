@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useMemo } from 'react';
-import { SocialPost, Platform, ApprovalStatus, groupPosts, groupKey } from '@/lib/types';
+import { useState, useMemo, useEffect } from 'react';
+import { SocialPost, Platform, ApprovalStatus, groupPosts, groupKey, resolveImageUrl } from '@/lib/types';
 import { PostList } from './PostList';
 import { PlatformSwitcher } from './PlatformSwitcher';
 import { FeedbackPanel } from './FeedbackPanel';
@@ -37,6 +37,17 @@ function PreviewRenderer({ platform, post }: { platform: Platform; post: SocialP
 
 export function Dashboard({ posts, sheetId, scriptUrl }: Props) {
   const groups = useMemo(() => groupPosts(posts), [posts]);
+
+  // Preload all images on mount
+  useEffect(() => {
+    posts.forEach(post => {
+      const url = resolveImageUrl(post.imageUrl);
+      if (url && url !== 'gradient') {
+        const img = new Image();
+        img.src = url;
+      }
+    });
+  }, [posts]);
 
   const [selectedGroupKey, setSelectedGroupKey] = useState(() =>
     groups.length > 0 ? groupKey(groups[0]) : ''

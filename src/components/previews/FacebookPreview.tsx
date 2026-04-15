@@ -1,4 +1,4 @@
-import { SocialPost } from '@/lib/types';
+import { SocialPost, resolveImageUrl } from '@/lib/types';
 import { SAMPLE_PROFILE } from '@/lib/sample-data';
 
 interface Props {
@@ -7,6 +7,7 @@ interface Props {
 
 export function FacebookPreview({ post }: Props) {
   const profile = SAMPLE_PROFILE;
+  const imageUrl = resolveImageUrl(post.imageUrl);
 
   return (
     <div className="w-full max-w-[500px] bg-white rounded-lg shadow-[0_1px_2px_rgba(0,0,0,0.2)] font-[Helvetica,_Arial,_sans-serif]">
@@ -40,16 +41,16 @@ export function FacebookPreview({ post }: Props) {
       </div>
 
       {/* Image */}
-      {post.imageUrl && (
+      {imageUrl && (
         <div>
-          {post.imageUrl === 'gradient' ? (
+          {imageUrl === 'gradient' ? (
             <div className="w-full h-[300px] bg-gradient-to-br from-blue-600 via-indigo-500 to-purple-600 flex items-center justify-center">
               <span className="text-white text-2xl font-bold opacity-80">
                 {post.campaign}
               </span>
             </div>
           ) : (
-            <img src={post.imageUrl} alt="" className="w-full" />
+            <img src={imageUrl} alt="" className="w-full" />
           )}
         </div>
       )}

@@ -21,6 +21,7 @@ export interface SocialPost {
 }
 
 export interface PostGroup {
+  id: string;
   campaign: string;
   platform: Platform;
   variants: SocialPost[];
@@ -53,9 +54,10 @@ export function groupPosts(posts: SocialPost[]): PostGroup[] {
   const map = new Map<string, PostGroup>();
   for (const post of posts) {
     if (post.status === 'draft') continue;
-    const key = `${post.campaign}::${post.platform}`;
+    // Group by Post ID — same ID with different variants = A/B variants
+    const key = post.id;
     if (!map.has(key)) {
-      map.set(key, { campaign: post.campaign, platform: post.platform, variants: [] });
+      map.set(key, { id: post.id, campaign: post.campaign, platform: post.platform, variants: [] });
     }
     map.get(key)!.variants.push(post);
   }
@@ -75,5 +77,26 @@ export function getCampaigns(groups: PostGroup[]): string[] {
 }
 
 export function groupKey(group: PostGroup): string {
-  return `${group.campaign}::${group.platform}`;
+  return group.id;
+}
+
+/**
+ * Convert Google Drive share links to direct image URLs.
+ * Handles:
+ *   https://drive.google.com/file/d/FILE_ID/view?...
+ *   https://drive.google.com/open?id=FILE_ID
+ */
+export function resolveImageUrl(url: string | undefined): string | undefined {
+  if (!url || url === 'gradient') return url;
+  // Google Drive file link
+  const driveFileMatch = url.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/);
+  if (driveFileMatch) {
+    return `https://drive.google.com/thumbnail?id=${driveFileMatch[1]}&sz=w1200`;
+  }
+  // Google Drive open link
+  const driveOpenMatch = url.match(/drive\.google\.com\/open\?id=([a-zA-Z0-9_-]+)/);
+  if (driveOpenMatch) {
+    return `https://drive.google.com/thumbnail?id=${driveOpenMatch[1]}&sz=w1200`;
+  }
+  return url;
 }

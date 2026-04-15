@@ -1,4 +1,4 @@
-import { SocialPost } from '@/lib/types';
+import { SocialPost, resolveImageUrl } from '@/lib/types';
 import { SAMPLE_PROFILE } from '@/lib/sample-data';
 
 interface Props {
@@ -7,6 +7,7 @@ interface Props {
 
 export function TwitterPreview({ post }: Props) {
   const profile = SAMPLE_PROFILE;
+  const imageUrl = resolveImageUrl(post.imageUrl);
 
   return (
     <div className="w-full max-w-[598px] bg-white border border-[#eff3f4] p-4 font-[system-ui,_-apple-system,_sans-serif]">
@@ -38,16 +39,16 @@ export function TwitterPreview({ post }: Props) {
           </div>
 
           {/* Image */}
-          {post.imageUrl && (
+          {imageUrl && (
             <div className="mt-3 rounded-2xl overflow-hidden border border-[#eff3f4]">
-              {post.imageUrl === 'gradient' ? (
+              {imageUrl === 'gradient' ? (
                 <div className="w-full h-[280px] bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center">
                   <span className="text-white text-xl font-bold opacity-80">
                     {post.campaign}
                   </span>
                 </div>
               ) : (
-                <img src={post.imageUrl} alt="" className="w-full" />
+                <img src={imageUrl} alt="" className="w-full" />
               )}
             </div>
           )}

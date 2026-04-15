@@ -31,7 +31,7 @@ Our beta users saw a 47% reduction in time-to-insight. Now it's your turn.
     clientComment: '',
   },
   {
-    id: 'POST-002',
+    id: 'POST-001',
     campaign: 'Q2 Product Launch',
     platform: 'linkedin',
     variant: 'B',
@@ -52,7 +52,7 @@ Link in comments 👇
     clientComment: '',
   },
   {
-    id: 'POST-003',
+    id: 'POST-002',
     campaign: 'Q2 Product Launch',
     platform: 'twitter',
     variant: 'A',
@@ -69,7 +69,7 @@ The future of analytics just landed.`,
     clientComment: '',
   },
   {
-    id: 'POST-004',
+    id: 'POST-002',
     campaign: 'Q2 Product Launch',
     platform: 'twitter',
     variant: 'B',
@@ -86,7 +86,7 @@ Available today →`,
     clientComment: '',
   },
   {
-    id: 'POST-005',
+    id: 'POST-003',
     campaign: 'Q2 Product Launch',
     platform: 'facebook',
     variant: 'A',
@@ -107,7 +107,7 @@ Ready to see what your data has been trying to tell you?`,
     clientComment: '',
   },
   {
-    id: 'POST-006',
+    id: 'POST-004',
     campaign: 'Q2 Product Launch',
     platform: 'instagram',
     variant: 'A',
@@ -127,7 +127,7 @@ Link in bio to get started.
 
   // ── Thought Leadership ─────────────────────────────
   {
-    id: 'POST-007',
+    id: 'POST-005',
     campaign: 'Thought Leadership',
     platform: 'linkedin',
     variant: 'A',
@@ -156,7 +156,7 @@ What's the most impactful question your data team has answered this year?
     clientComment: '',
   },
   {
-    id: 'POST-008',
+    id: 'POST-005',
     campaign: 'Thought Leadership',
     platform: 'linkedin',
     variant: 'B',
@@ -181,7 +181,7 @@ We're rethinking how we build QuantumFlow around this finding. Stay tuned.
     clientComment: '',
   },
   {
-    id: 'POST-009',
+    id: 'POST-006',
     campaign: 'Thought Leadership',
     platform: 'twitter',
     variant: 'A',
@@ -202,7 +202,7 @@ More dashboards ≠ more data-driven. 🧵`,
 
   // ── Customer Spotlight ─────────────────────────────
   {
-    id: 'POST-010',
+    id: 'POST-007',
     campaign: 'Customer Spotlight',
     platform: 'linkedin',
     variant: 'A',
@@ -225,7 +225,7 @@ Read the full story →
     clientComment: '',
   },
   {
-    id: 'POST-011',
+    id: 'POST-008',
     campaign: 'Customer Spotlight',
     platform: 'facebook',
     variant: 'A',
@@ -248,7 +248,7 @@ Their full story is worth a read 👇`,
     clientComment: '',
   },
   {
-    id: 'POST-012',
+    id: 'POST-009',
     campaign: 'Customer Spotlight',
     platform: 'instagram',
     variant: 'A',
@@ -268,7 +268,7 @@ Full story at the link in bio.
 
   // ── Paid Ads ───────────────────────────────────────
   {
-    id: 'POST-013',
+    id: 'POST-010',
     campaign: 'Q2 Paid Campaign',
     platform: 'linkedin-ad',
     variant: 'A',
@@ -284,7 +284,7 @@ Full story at the link in bio.
     clientComment: '',
   },
   {
-    id: 'POST-014',
+    id: 'POST-010',
     campaign: 'Q2 Paid Campaign',
     platform: 'linkedin-ad',
     variant: 'B',
@@ -299,7 +299,7 @@ Full story at the link in bio.
     clientComment: '',
   },
   {
-    id: 'POST-015',
+    id: 'POST-011',
     campaign: 'Q2 Paid Campaign',
     platform: 'google-ad',
     variant: 'A',
@@ -313,7 +313,7 @@ Full story at the link in bio.
     clientComment: '',
   },
   {
-    id: 'POST-016',
+    id: 'POST-011',
     campaign: 'Q2 Paid Campaign',
     platform: 'google-ad',
     variant: 'B',

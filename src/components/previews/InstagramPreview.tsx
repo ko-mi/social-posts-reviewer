@@ -1,4 +1,4 @@
-import { SocialPost } from '@/lib/types';
+import { SocialPost, resolveImageUrl } from '@/lib/types';
 import { SAMPLE_PROFILE } from '@/lib/sample-data';
 
 interface Props {
@@ -7,6 +7,7 @@ interface Props {
 
 export function InstagramPreview({ post }: Props) {
   const profile = SAMPLE_PROFILE;
+  const imageUrl = resolveImageUrl(post.imageUrl);
 
   return (
     <div className="w-full max-w-[470px] bg-white border border-[#dbdbdb] rounded-lg font-[system-ui,_-apple-system,_sans-serif]">
@@ -29,14 +30,14 @@ export function InstagramPreview({ post }: Props) {
 
       {/* Image */}
       <div>
-        {post.imageUrl === 'gradient' ? (
+        {imageUrl === 'gradient' ? (
           <div className="w-full aspect-square bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center">
             <span className="text-white text-2xl font-bold opacity-80 text-center px-8">
               {post.campaign}
             </span>
           </div>
-        ) : post.imageUrl ? (
-          <img src={post.imageUrl} alt="" className="w-full aspect-square object-cover" />
+        ) : imageUrl ? (
+          <img src={imageUrl} alt="" className="w-full aspect-square object-cover" />
         ) : (
           <div className="w-full aspect-square bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
             <span className="text-gray-400 text-sm">Image preview</span>

@@ -1,4 +1,4 @@
-import { SocialPost } from '@/lib/types';
+import { SocialPost, resolveImageUrl } from '@/lib/types';
 import { SAMPLE_PROFILE } from '@/lib/sample-data';
 
 interface Props {
@@ -7,6 +7,7 @@ interface Props {
 
 export function LinkedInAdPreview({ post }: Props) {
   const profile = SAMPLE_PROFILE;
+  const imageUrl = resolveImageUrl(post.imageUrl);
   const displayUrl = post.linkUrl
     ? post.linkUrl.replace(/^https?:\/\//, '').split('/')[0]
     : 'quantumflow.com';
@@ -42,14 +43,14 @@ export function LinkedInAdPreview({ post }: Props) {
 
       {/* Image */}
       <div>
-        {post.imageUrl === 'gradient' ? (
+        {imageUrl === 'gradient' ? (
           <div className="w-full h-[300px] bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center">
             <span className="text-white text-2xl font-bold opacity-80">
               {post.campaign}
             </span>
           </div>
-        ) : post.imageUrl ? (
-          <img src={post.imageUrl} alt="" className="w-full" />
+        ) : imageUrl ? (
+          <img src={imageUrl} alt="" className="w-full" />
         ) : (
           <div className="w-full h-[250px] bg-gradient-to-br from-blue-600 via-indigo-600 to-violet-600 flex items-center justify-center">
             <span className="text-white text-xl font-bold opacity-70">

@@ -62,22 +62,27 @@ export function PostList({
                     isSelected ? 'bg-white shadow-sm' : 'hover:bg-gray-100'
                   }`}
                 >
-                  {/* Platform badge */}
+                  {/* Post ID + Platform badge */}
                   <div className="flex items-center justify-between mb-1.5">
-                    <span
-                      className={`inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium text-white ${PLATFORM_COLORS[group.platform]}`}
-                    >
-                      {PLATFORM_LABELS[group.platform]}
-                    </span>
+                    <div className="flex items-center gap-1.5 min-w-0">
+                      <span className="text-[11px] font-mono text-gray-400 flex-shrink-0">
+                        {group.id}
+                      </span>
+                      <span
+                        className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium text-white flex-shrink-0 ${PLATFORM_COLORS[group.platform]}`}
+                      >
+                        {PLATFORM_LABELS[group.platform]}
+                      </span>
+                    </div>
 
                     {/* Approval indicators */}
                     <div className="flex gap-0.5">
                       {group.variants.map(v => {
-                        const fb = feedbackMap[v.id];
+                        const fb = feedbackMap[`${v.id}_${v.variant}`] ?? feedbackMap[v.id];
                         const status = fb?.approved ?? v.approved;
                         return (
                           <span
-                            key={v.id}
+                            key={`${v.id}_${v.variant}`}
                             className={`w-2 h-2 rounded-full ${
                               status === 'approved'
                                 ? 'bg-green-500'
@@ -91,9 +96,9 @@ export function PostList({
                     </div>
                   </div>
 
-                  {/* Preview text */}
+                  {/* Headline or preview text */}
                   <p className="text-xs text-gray-600 line-clamp-2 leading-tight">
-                    {group.variants[0]?.text.slice(0, 80)}...
+                    {group.variants[0]?.headline || group.variants[0]?.text.slice(0, 80)}
                   </p>
 
                   {/* Variant tabs (when selected) */}

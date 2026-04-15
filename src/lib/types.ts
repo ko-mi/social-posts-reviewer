@@ -91,12 +91,12 @@ export function resolveImageUrl(url: string | undefined): string | undefined {
   // Google Drive file link
   const driveFileMatch = url.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/);
   if (driveFileMatch) {
-    return `https://lh3.googleusercontent.com/d/${driveFileMatch[1]}=w1200`;
+    return `https://drive.google.com/uc?export=view&id=${driveFileMatch[1]}`;
   }
   // Google Drive open link
   const driveOpenMatch = url.match(/drive\.google\.com\/open\?id=([a-zA-Z0-9_-]+)/);
   if (driveOpenMatch) {
-    return `https://lh3.googleusercontent.com/d/${driveOpenMatch[1]}=w1200`;
+    return `https://drive.google.com/uc?export=view&id=${driveOpenMatch[1]}`;
   }
   return url;
 }

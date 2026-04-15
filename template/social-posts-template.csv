@@ -1,4 +1,4 @@
-Post ID,Campaign,Platform,Variant,Post Text,Image URL,Link URL,Scheduled Date,Status,Approved,Client Comment,Reviewed At
+Post ID,Campaign,Platform,Variant,Post Text,Image URL,Link URL,Headline,CTA Text,Scheduled Date,Status,Approved,Client Comment,Reviewed At
 POST-001,Q2 Product Launch,LinkedIn,A,"We're thrilled to announce the launch of QuantumFlow 3.0 — our most powerful analytics platform yet.
 
 What's new:
@@ -9,7 +9,7 @@ What's new:
 
 Our beta users saw a 47% reduction in time-to-insight. Now it's your turn.
 
-#ProductLaunch #Analytics #AI #DataDriven",,,2025-04-20,Ready for Review,,,
+#ProductLaunch #Analytics #AI #DataDriven",,,,,,Ready for Review,,,
 POST-002,Q2 Product Launch,LinkedIn,B,"""We used to spend 3 hours building reports. Now it takes 20 minutes.""
 
 That's what Sarah Chen, VP of Analytics at TechCorp, told us after beta testing QuantumFlow 3.0.
@@ -20,21 +20,21 @@ The new AI-powered engine doesn't just crunch numbers faster — it surfaces the
 
 Link in comments 👇
 
-#CustomerSuccess #Analytics #AI",,,2025-04-20,Ready for Review,,,
+#CustomerSuccess #Analytics #AI",,,,,,Ready for Review,,,
 POST-003,Q2 Product Launch,Twitter,A,"QuantumFlow 3.0 is here. 🚀
 
 AI-powered anomaly detection. Real-time dashboards. 10x faster queries.
 
 Our beta users cut time-to-insight by 47%.
 
-The future of analytics just landed.",,,2025-04-20,Ready for Review,,,
+The future of analytics just landed.",,,,,,Ready for Review,,,
 POST-004,Q2 Product Launch,Twitter,B,"""We used to spend 3 hours on reports. Now? 20 minutes.""
 
 We built QuantumFlow 3.0 around one idea: you shouldn't need a data team to get answers.
 
 AI anomaly detection × real-time dashboards × 200+ integrations.
 
-Available today →",,,2025-04-20,Ready for Review,,,
+Available today →",,,,,,Ready for Review,,,
 POST-005,Q2 Product Launch,Facebook,A,"Big news! QuantumFlow 3.0 is officially live! 🎉
 
 We've been working on this for months, and we can't wait for you to try it.
@@ -45,7 +45,7 @@ Here's what's inside:
 ✅ A query engine that's 10x faster
 ✅ 200+ integrations with your favorite tools
 
-Ready to see what your data has been trying to tell you?",,,2025-04-20,Ready for Review,,,
+Ready to see what your data has been trying to tell you?",,,,,,Ready for Review,,,
 POST-006,Thought Leadership,LinkedIn,A,"Hot take: Most companies don't have a ""data problem."" They have a ""question problem.""
 
 I've talked to 50+ analytics leaders this quarter. The pattern is always the same:
@@ -62,7 +62,7 @@ The best analytics cultures I've seen do three things differently:
 
 The tools matter less than you think. The questions matter more than you realize.
 
-#Analytics #DataCulture #Leadership",,,2025-04-22,Ready for Review,,,
+#Analytics #DataCulture #Leadership",,,,,,Ready for Review,,,
 POST-007,Customer Spotlight,LinkedIn,A,"When NovaTech's data team was drowning in ad-hoc report requests, they made a bold decision: give every department self-serve analytics.
 
 The results after 6 months with QuantumFlow:
@@ -73,4 +73,8 @@ The results after 6 months with QuantumFlow:
 
 Read the full story →
 
-#CustomerSuccess #Analytics #SelfServeAnalytics",,,2025-04-25,Ready for Review,,,
+#CustomerSuccess #Analytics #SelfServeAnalytics",,,,,,Ready for Review,,,
+POST-008,Q2 Paid Campaign,LinkedIn Ad,A,"Stop drowning in spreadsheets. QuantumFlow 3.0 turns raw data into real-time dashboards your whole team can use — no SQL required.",,https://quantumflow.com/trial,AI Analytics That Actually Save You Time,Start Free Trial,2025-04-21,Ready for Review,,,
+POST-009,Q2 Paid Campaign,LinkedIn Ad,B,"Our beta users cut reporting time by 80%. Now QuantumFlow 3.0 is available to everyone — AI-powered insights, real-time dashboards, 200+ integrations.",,https://quantumflow.com/demo,Cut Reporting Time by 80% With AI,Learn More,2025-04-21,Ready for Review,,,
+POST-010,Q2 Paid Campaign,Google Ad,A,"AI anomaly detection and real-time collaborative dashboards. Join 10,000+ teams making faster, data-driven decisions. Start your free trial today.",,https://www.quantumflow.com/analytics,QuantumFlow 3.0 — AI Analytics Platform | Cut Reporting Time 80% | Free Trial,,2025-04-21,Ready for Review,,,
+POST-011,Q2 Paid Campaign,Google Ad,B,"Self-serve analytics for every team. No SQL needed. Build dashboards in minutes, not days. Trusted by 10,000+ companies worldwide.",,https://www.quantumflow.com/self-serve,Self-Serve Analytics for Teams | No SQL Required | Start Free,,2025-04-21,Ready for Review,,,

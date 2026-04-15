@@ -9,6 +9,7 @@ export interface SocialPost {
   variant: string;
   text: string;
   headline?: string;
+  description?: string;
   ctaText?: string;
   imageUrl?: string;
   linkUrl?: string;

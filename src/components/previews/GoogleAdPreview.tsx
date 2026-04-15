@@ -71,7 +71,7 @@ export function GoogleAdPreview({ post }: Props) {
 
         {/* Description */}
         <p className="text-[14px] text-[#4d5156] leading-[22px] mt-1">
-          {post.text}
+          {post.description || post.text}
         </p>
 
         {/* Sitelinks (mock) */}

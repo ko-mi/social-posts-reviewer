@@ -69,9 +69,9 @@ export function LinkedInAdPreview({ post }: Props) {
             <p className="text-[16px] font-semibold text-[rgba(0,0,0,0.9)] leading-tight">
               {post.headline || 'Ad Headline'}
             </p>
-            {post.ctaText && (
+            {(post.description || post.ctaText) && (
               <p className="text-[12px] text-[rgba(0,0,0,0.6)] mt-0.5 truncate">
-                {post.text.slice(0, 80)}
+                {post.description || post.text.slice(0, 80)}
               </p>
             )}
           </div>

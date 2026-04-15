@@ -19,16 +19,18 @@ function parseApproval(raw: string): 'approved' | 'rejected' | null {
 }
 
 export function extractSheetId(url: string): string | null {
-  // Handle full URLs
   const match = url.match(/\/spreadsheets\/d\/([a-zA-Z0-9-_]+)/);
   if (match) return match[1];
-  // Handle raw sheet ID
   if (/^[a-zA-Z0-9-_]+$/.test(url.trim())) return url.trim();
   return null;
 }
 
+// Canonical column order:
+// 0: Post ID, 1: Campaign, 2: Platform, 3: Variant, 4: Post Text,
+// 5: Headline, 6: Description, 7: CTA Text, 8: Image URL, 9: Link URL,
+// 10: Scheduled Date, 11: Status, 12: Approved, 13: Client Comment, 14: Reviewed At
+
 export async function fetchSheetData(sheetId: string): Promise<SocialPost[]> {
-  // Proxy through our API route to avoid CORS issues
   const url = `/api/sheets?id=${encodeURIComponent(sheetId)}`;
 
   const res = await fetch(url);
@@ -39,8 +41,6 @@ export async function fetchSheetData(sheetId: string): Promise<SocialPost[]> {
 
   const text = await res.text();
 
-  // Response is wrapped in google.visualization.Query.setResponse({...})
-  // Remove newlines so single-line regex works
   const jsonStr = text.match(/google\.visualization\.Query\.setResponse\(([\s\S]+)\);?$/);
   if (!jsonStr) {
     throw new Error('Could not parse sheet data. Make sure the sheet is published to web.');
@@ -54,38 +54,51 @@ export async function fetchSheetData(sheetId: string): Promise<SocialPost[]> {
     throw new Error('Sheet appears to be empty.');
   }
 
-  // Map columns by header label (first row might be headers in the cols)
+  // Map columns by header label
   const headerMap: Record<string, number> = {};
   cols.forEach((col: { label: string }, i: number) => {
-    headerMap[col.label?.toLowerCase().trim()] = i;
+    const label = col.label?.toLowerCase().trim();
+    if (label) headerMap[label] = i;
   });
 
-  // Expected columns (by position fallback if headers aren't set)
-  const getCell = (row: { c: Array<{ v: string | null } | null> }, colName: string, fallbackIdx: number): string => {
-    const idx = headerMap[colName] ?? fallbackIdx;
-    return row.c?.[idx]?.v?.toString() ?? '';
+  const getCell = (row: { c: Array<{ v: string | null } | null> }, colNames: string[], fallbackIdx: number): string => {
+    for (const name of colNames) {
+      if (headerMap[name] !== undefined) {
+        return row.c?.[headerMap[name]]?.v?.toString() ?? '';
+      }
+    }
+    if (fallbackIdx >= 0 && fallbackIdx < (row.c?.length ?? 0)) {
+      return row.c?.[fallbackIdx]?.v?.toString() ?? '';
+    }
+    return '';
   };
 
   return rows
     .map((row: { c: Array<{ v: string | null } | null> }, i: number) => {
-      const text = getCell(row, 'post text', 4) || getCell(row, 'text', 4) || getCell(row, 'copy', 4);
-      if (!text) return null;
+      // Try to find text content - skip truly empty rows
+      const postText = getCell(row, ['post text', 'text', 'copy'], 4);
+      const headline = getCell(row, ['headline'], 5);
+      const description = getCell(row, ['description', 'desc'], 6);
+
+      // A row needs at least post text OR a headline to be valid
+      if (!postText && !headline) return null;
 
       return {
-        id: getCell(row, 'post id', 0) || `POST-${String(i + 1).padStart(3, '0')}`,
-        campaign: getCell(row, 'campaign', 1) || 'Uncategorized',
-        platform: parsePlatform(getCell(row, 'platform', 2)),
-        variant: getCell(row, 'variant', 3) || 'A',
-        text,
-        headline: getCell(row, 'headline', -1) || undefined,
-        ctaText: getCell(row, 'cta text', -1) || getCell(row, 'cta', -1) || undefined,
-        imageUrl: getCell(row, 'image url', 5) || undefined,
-        linkUrl: getCell(row, 'link url', 6) || undefined,
-        scheduledDate: getCell(row, 'scheduled date', 7) || undefined,
-        status: getCell(row, 'status', 8) || 'ready',
-        approved: parseApproval(getCell(row, 'approved', 9)),
-        clientComment: getCell(row, 'client comment', 10),
-        reviewedAt: getCell(row, 'reviewed at', 11) || undefined,
+        id: getCell(row, ['post id', 'id'], 0) || `POST-${String(i + 1).padStart(3, '0')}`,
+        campaign: getCell(row, ['campaign', 'group'], 1) || 'Uncategorized',
+        platform: parsePlatform(getCell(row, ['platform'], 2)),
+        variant: getCell(row, ['variant'], 3) || 'A',
+        text: postText,
+        headline: headline || undefined,
+        description: description || undefined,
+        ctaText: getCell(row, ['cta text', 'cta'], 7) || undefined,
+        imageUrl: getCell(row, ['image url', 'image'], 8) || undefined,
+        linkUrl: getCell(row, ['link url', 'link', 'url'], 9) || undefined,
+        scheduledDate: getCell(row, ['scheduled date', 'date', 'schedule'], 10) || undefined,
+        status: getCell(row, ['status'], 11) || 'ready',
+        approved: parseApproval(getCell(row, ['approved'], 12)),
+        clientComment: getCell(row, ['client comment', 'comment', 'feedback'], 13),
+        reviewedAt: getCell(row, ['reviewed at', 'reviewed'], 14) || undefined,
       } satisfies SocialPost;
     })
     .filter((p: SocialPost | null): p is SocialPost => p !== null);

@@ -1,0 +1,37 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-background: #ffffff;
+  --color-foreground: #171717;
+  --font-sans: var(--font-inter), system-ui, -apple-system, sans-serif;
+}
+
+body {
+  background: var(--color-background);
+  color: var(--color-foreground);
+}
+
+/* Smooth transitions for approval buttons */
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.2s ease-out;
+}
+
+/* Custom scrollbar for post list */
+.overflow-y-auto::-webkit-scrollbar {
+  width: 6px;
+}
+.overflow-y-auto::-webkit-scrollbar-track {
+  background: transparent;
+}
+.overflow-y-auto::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 3px;
+}
+.overflow-y-auto::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}

@@ -88,15 +88,17 @@ export function groupKey(group: PostGroup): string {
  */
 export function resolveImageUrl(url: string | undefined): string | undefined {
   if (!url || url === 'gradient') return url;
-  // Google Drive file link
+  // Google Drive file link — proxy through our API to avoid CORS/referrer issues
   const driveFileMatch = url.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/);
   if (driveFileMatch) {
-    return `https://drive.google.com/uc?export=view&id=${driveFileMatch[1]}`;
+    const directUrl = `https://drive.google.com/uc?export=view&id=${driveFileMatch[1]}`;
+    return `/api/image?url=${encodeURIComponent(directUrl)}`;
   }
   // Google Drive open link
   const driveOpenMatch = url.match(/drive\.google\.com\/open\?id=([a-zA-Z0-9_-]+)/);
   if (driveOpenMatch) {
-    return `https://drive.google.com/uc?export=view&id=${driveOpenMatch[1]}`;
+    const directUrl = `https://drive.google.com/uc?export=view&id=${driveOpenMatch[1]}`;
+    return `/api/image?url=${encodeURIComponent(directUrl)}`;
   }
   return url;
 }

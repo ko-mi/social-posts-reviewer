@@ -6,7 +6,9 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'Missing sheet id' }, { status: 400 });
   }
 
-  const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json`;
+  const gid = req.nextUrl.searchParams.get('gid');
+  let url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&headers=1`;
+  if (gid) url += `&gid=${gid}`;
 
   try {
     const res = await fetch(url);

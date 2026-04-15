@@ -25,13 +25,19 @@ export function extractSheetId(url: string): string | null {
   return null;
 }
 
+export function extractGid(url: string): string | null {
+  const match = url.match(/[?&#]gid=(\d+)/);
+  return match ? match[1] : null;
+}
+
 // Canonical column order:
 // 0: Post ID, 1: Campaign, 2: Platform, 3: Variant, 4: Post Text,
 // 5: Headline, 6: Description, 7: CTA Text, 8: Image URL, 9: Link URL,
 // 10: Scheduled Date, 11: Status, 12: Approved, 13: Client Comment, 14: Reviewed At
 
-export async function fetchSheetData(sheetId: string): Promise<SocialPost[]> {
-  const url = `/api/sheets?id=${encodeURIComponent(sheetId)}`;
+export async function fetchSheetData(sheetId: string, gid?: string): Promise<SocialPost[]> {
+  let url = `/api/sheets?id=${encodeURIComponent(sheetId)}`;
+  if (gid) url += `&gid=${encodeURIComponent(gid)}`;
 
   const res = await fetch(url);
   if (!res.ok) {

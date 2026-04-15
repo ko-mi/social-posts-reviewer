@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { extractSheetId } from '@/lib/sheets';
+import { extractSheetId, extractGid } from '@/lib/sheets';
 
 export default function Home() {
   const [sheetUrl, setSheetUrl] = useState('');
@@ -13,9 +13,10 @@ export default function Home() {
   const [showSetup, setShowSetup] = useState(false);
   const router = useRouter();
 
-  const buildPreviewUrl = (sheetId: string, script?: string) => {
+  const buildPreviewUrl = (sheetId: string, script?: string, gid?: string) => {
     const base = typeof window !== 'undefined' ? window.location.origin : '';
     let url = `${base}/preview?sheet=${sheetId}`;
+    if (gid) url += `&gid=${gid}`;
     if (script) url += `&script=${encodeURIComponent(script)}`;
     return url;
   };
@@ -27,7 +28,8 @@ export default function Home() {
       setError('Please enter a valid Google Sheet URL or ID');
       return;
     }
-    const url = buildPreviewUrl(sheetId, scriptUrl || undefined);
+    const gid = extractGid(sheetUrl) || undefined;
+    const url = buildPreviewUrl(sheetId, scriptUrl || undefined, gid);
     router.push(url.replace(window.location.origin, ''));
   };
 
@@ -37,7 +39,8 @@ export default function Home() {
       setError('Please enter a valid Google Sheet URL or ID');
       return;
     }
-    setShareLink(buildPreviewUrl(sheetId, scriptUrl || undefined));
+    const gid = extractGid(sheetUrl) || undefined;
+    setShareLink(buildPreviewUrl(sheetId, scriptUrl || undefined, gid));
   };
 
   const handleCopy = () => {

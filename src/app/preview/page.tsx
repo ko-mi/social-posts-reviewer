@@ -3,7 +3,7 @@
 import { useSearchParams } from 'next/navigation';
 import { useState, useEffect, Suspense } from 'react';
 import { SocialPost } from '@/lib/types';
-import { fetchSheetData, extractSheetId } from '@/lib/sheets';
+import { fetchSheetData, extractSheetId, extractGid } from '@/lib/sheets';
 import { SAMPLE_POSTS } from '@/lib/sample-data';
 import { Dashboard } from '@/components/Dashboard';
 
@@ -11,6 +11,7 @@ function PreviewContent() {
   const searchParams = useSearchParams();
   const sheetParam = searchParams.get('sheet');
   const scriptParam = searchParams.get('script');
+  const gidParam = searchParams.get('gid');
   const isDemo = searchParams.get('demo') === 'true' || !sheetParam;
 
   const [posts, setPosts] = useState<SocialPost[]>([]);
@@ -31,7 +32,10 @@ function PreviewContent() {
       return;
     }
 
-    fetchSheetData(sheetId)
+    // Extract gid from the original URL or from explicit param
+    const gid = gidParam || extractGid(sheetParam!) || undefined;
+
+    fetchSheetData(sheetId, gid)
       .then(data => {
         setPosts(data);
         setLoading(false);

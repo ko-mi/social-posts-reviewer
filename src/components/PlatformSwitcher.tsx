@@ -8,7 +8,7 @@ interface Props {
   onChange: (platform: Platform) => void;
 }
 
-const PLATFORMS: Platform[] = ['linkedin', 'linkedin-ad', 'twitter', 'facebook', 'instagram', 'google-ad'];
+const PLATFORMS: Platform[] = ['linkedin-ad', 'linkedin', 'twitter', 'facebook', 'instagram', 'google-ad'];
 
 const PLATFORM_ACCENT: Record<Platform, string> = {
   linkedin: 'border-[#0a66c2] text-[#0a66c2]',

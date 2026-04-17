@@ -62,6 +62,7 @@ export function Dashboard({ posts, sheetId, gid, scriptUrl, shareToken, initialC
   );
   const [selectedVariant, setSelectedVariant] = useState('A');
   const [previewPlatform, setPreviewPlatform] = useState<Platform | null>(null);
+  const [mobilePanel, setMobilePanel] = useState<'posts' | 'comments' | null>(null);
   const [feedbackMap, setFeedbackMap] = useState<
     Record<string, { approved: ApprovalStatus; comment: string }>
   >({});
@@ -204,28 +205,83 @@ export function Dashboard({ posts, sheetId, gid, scriptUrl, shareToken, initialC
   const reviewedCount = Object.keys(feedbackMap).length
     + posts.filter(p => p.approved !== null && !feedbackMap[p.id]).length;
 
+  const currentComments = currentPost ? commentsCache[`${currentPost.id}_${currentPost.variant}`] || [] : [];
+
   return (
     <div className="flex h-screen bg-white">
-      <PostList
-        groups={groups}
-        selectedGroupKey={selectedGroupKey}
-        selectedVariant={selectedVariant}
-        feedbackMap={feedbackMap}
-        commentsMap={commentsCache}
-        onSelectGroup={handleSelectGroup}
-        onSelectVariant={setSelectedVariant}
-      />
+      {/* Desktop sidebar */}
+      <div className="hidden lg:flex">
+        <PostList
+          groups={groups}
+          selectedGroupKey={selectedGroupKey}
+          selectedVariant={selectedVariant}
+          feedbackMap={feedbackMap}
+          commentsMap={commentsCache}
+          onSelectGroup={(key) => { handleSelectGroup(key); setMobilePanel(null); }}
+          onSelectVariant={setSelectedVariant}
+        />
+      </div>
+
+      {/* Mobile post list overlay */}
+      {mobilePanel === 'posts' && (
+        <div className="fixed inset-0 z-40 lg:hidden flex">
+          <div className="w-80 max-w-[85vw] h-full">
+            <PostList
+              groups={groups}
+              selectedGroupKey={selectedGroupKey}
+              selectedVariant={selectedVariant}
+              feedbackMap={feedbackMap}
+              commentsMap={commentsCache}
+              onSelectGroup={(key) => { handleSelectGroup(key); setMobilePanel(null); }}
+              onSelectVariant={setSelectedVariant}
+            />
+          </div>
+          <div className="flex-1 bg-black/30" onClick={() => setMobilePanel(null)} />
+        </div>
+      )}
+
+      {/* Mobile comments overlay */}
+      {mobilePanel === 'comments' && (
+        <div className="fixed inset-0 z-40 lg:hidden flex justify-end">
+          <div className="flex-1 bg-black/30" onClick={() => setMobilePanel(null)} />
+          <div className="w-80 max-w-[85vw] h-full">
+            <FeedbackPanel
+              post={currentPost}
+              currentFeedback={currentPost ? feedbackMap[`${currentPost.id}_${currentPost.variant}`] : undefined}
+              comments={currentComments}
+              sheetId={sheetId}
+              gid={gid}
+              isAuthenticated={!!authUser || !!shareToken}
+              shareToken={shareToken}
+              clientName={clientName}
+              onApprove={handleApprove}
+              onAddComment={addCommentToCache}
+            />
+          </div>
+        </div>
+      )}
 
       <div className="flex-1 flex flex-col min-w-0">
         {/* Top bar */}
-        <div className="flex items-center justify-between px-6 py-3 border-b border-warm-gray bg-white">
-          <div>
-            <h1 className="text-lg font-display italic text-ink">Social Posts Preview</h1>
+        <div className="flex items-center justify-between px-3 sm:px-4 md:px-6 py-3 border-b border-warm-gray bg-white gap-2">
+          <div className="min-w-0">
+            {/* Mobile toggle for posts */}
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setMobilePanel(mobilePanel === 'posts' ? null : 'posts')}
+                className="lg:hidden p-1.5 rounded-md hover:bg-cream-dark"
+              >
+                <svg className="w-5 h-5 text-ink" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="18" x2="21" y2="18" />
+                </svg>
+              </button>
+              <h1 className="text-base sm:text-lg font-display italic text-ink truncate">Social Posts Preview</h1>
+            </div>
             {sheetId && authUser && (
-              <p className="text-xs text-approve">Signed in as {authUser.name} — feedback syncs to sheet</p>
+              <p className="text-xs text-approve hidden sm:block">Signed in as {authUser.name} — feedback syncs to sheet</p>
             )}
             {sheetId && shareToken && !authUser && (
-              <p className="text-xs text-approve">
+              <p className="text-xs text-approve hidden sm:block">
                 Reviewing as <strong>{clientName || 'Anonymous'}</strong>
                 {' · '}
                 <button onClick={() => setAskingName(true)} className="underline hover:text-green-700">
@@ -234,26 +290,26 @@ export function Dashboard({ posts, sheetId, gid, scriptUrl, shareToken, initialC
               </p>
             )}
             {sheetId && !authUser && !shareToken && authChecked && (
-              <p className="text-xs text-ink-muted">
+              <p className="text-xs text-ink-muted hidden sm:block">
                 Read-only.{' '}
                 <a href="/api/auth/login" className="underline">Sign in with Google</a> to approve and comment.
               </p>
             )}
             {!sheetId && (
-              <p className="text-xs text-ink-muted">Demo mode — using sample data</p>
+              <p className="text-xs text-ink-muted hidden sm:block">Demo mode — using sample data</p>
             )}
           </div>
-          <div className="flex items-center gap-4">
-            <span className="text-sm text-ink-muted">
-              {reviewedCount}/{totalPosts} reviewed
+          <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0">
+            <span className="text-xs sm:text-sm text-ink-muted">
+              {reviewedCount}/{totalPosts}
             </span>
 
-            {/* Share button — only for authenticated contractors */}
+            {/* Share button */}
             {authUser && sheetId && !shareToken && (
               <button
                 onClick={handleCreateShareLink}
                 disabled={creatingShare}
-                className="px-3 py-1.5 bg-accent text-white rounded-lg text-xs font-medium hover:bg-accent-hover transition-colors disabled:opacity-50"
+                className="hidden sm:inline-flex px-3 py-1.5 bg-accent text-white rounded-lg text-xs font-medium hover:bg-accent-hover transition-colors disabled:opacity-50"
               >
                 {creatingShare ? 'Creating...' : 'Share with client'}
               </button>
@@ -264,18 +320,33 @@ export function Dashboard({ posts, sheetId, gid, scriptUrl, shareToken, initialC
                 {authUser.picture && (
                   <img src={authUser.picture} alt="" className="w-6 h-6 rounded-full" referrerPolicy="no-referrer" />
                 )}
-                <a href="/api/auth/logout" className="text-xs text-ink-muted hover:text-gray-600">
+                <a href="/api/auth/logout" className="text-xs text-ink-muted hover:text-gray-600 hidden sm:inline">
                   Sign out
                 </a>
               </div>
             ) : authChecked && sheetId && !shareToken ? (
               <a
                 href="/api/auth/login"
-                className="px-3 py-1.5 bg-white border border-warm-gray rounded-lg text-xs font-medium text-ink hover:bg-gray-50 transition-colors"
+                className="px-3 py-1.5 bg-white border border-warm-gray rounded-lg text-xs font-medium text-ink hover:bg-gray-50 transition-colors whitespace-nowrap"
               >
-                Sign in with Google
+                Sign in
               </a>
             ) : null}
+
+            {/* Mobile toggle for comments */}
+            <button
+              onClick={() => setMobilePanel(mobilePanel === 'comments' ? null : 'comments')}
+              className="lg:hidden p-1.5 rounded-md hover:bg-cream-dark relative"
+            >
+              <svg className="w-5 h-5 text-ink" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+              </svg>
+              {currentComments.length > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-accent text-white text-[9px] font-bold rounded-full flex items-center justify-center">
+                  {currentComments.length}
+                </span>
+              )}
+            </button>
           </div>
         </div>
 
@@ -287,7 +358,7 @@ export function Dashboard({ posts, sheetId, gid, scriptUrl, shareToken, initialC
 
         <div className="flex-1 flex min-h-0">
           {/* Preview */}
-          <div className="flex-1 overflow-y-auto bg-preview-bg flex items-start justify-center p-8">
+          <div className="flex-1 overflow-y-auto bg-preview-bg flex items-start justify-center p-4 sm:p-6 md:p-8">
             {currentPost ? (
               <PreviewRenderer platform={activePlatform} post={currentPost} imageCache={imageCache} />
             ) : (
@@ -295,26 +366,28 @@ export function Dashboard({ posts, sheetId, gid, scriptUrl, shareToken, initialC
             )}
           </div>
 
-          {/* Right panel: feedback */}
-          <FeedbackPanel
-            post={currentPost}
-            currentFeedback={currentPost ? feedbackMap[`${currentPost.id}_${currentPost.variant}`] : undefined}
-            comments={currentPost ? commentsCache[`${currentPost.id}_${currentPost.variant}`] || [] : []}
-            sheetId={sheetId}
-            gid={gid}
-            isAuthenticated={!!authUser || !!shareToken}
-            shareToken={shareToken}
-            clientName={clientName}
-            onApprove={handleApprove}
-            onAddComment={addCommentToCache}
-          />
+          {/* Desktop feedback panel */}
+          <div className="hidden lg:flex">
+            <FeedbackPanel
+              post={currentPost}
+              currentFeedback={currentPost ? feedbackMap[`${currentPost.id}_${currentPost.variant}`] : undefined}
+              comments={currentComments}
+              sheetId={sheetId}
+              gid={gid}
+              isAuthenticated={!!authUser || !!shareToken}
+              shareToken={shareToken}
+              clientName={clientName}
+              onApprove={handleApprove}
+              onAddComment={addCommentToCache}
+            />
+          </div>
         </div>
       </div>
 
       {/* Share link modal */}
       {shareLink && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4" onClick={() => setShareLink('')}>
-          <div className="bg-white rounded-2xl p-6 max-w-lg w-full shadow-2xl" onClick={e => e.stopPropagation()}>
+          <div className="bg-white rounded-2xl p-4 sm:p-6 max-w-sm sm:max-w-lg w-full shadow-2xl" onClick={e => e.stopPropagation()}>
             <h2 className="text-lg font-semibold text-ink mb-1">Share this link with your client</h2>
             <p className="text-sm text-ink-muted mb-4">
               Anyone with the link can review and leave feedback under their own name. No sign-in required.

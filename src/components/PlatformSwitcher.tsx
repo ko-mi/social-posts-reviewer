@@ -24,7 +24,7 @@ const PLATFORM_ACCENT: Record<Platform, string> = {
 
 export function PlatformSwitcher({ selected, originalPlatform, onChange }: Props) {
   return (
-    <div className="border-b border-warm-gray bg-white px-6 py-2.5 flex items-center gap-6">
+    <div className="border-b border-warm-gray bg-white px-3 sm:px-4 md:px-6 py-2.5 flex items-center gap-3 sm:gap-4 md:gap-6 overflow-x-auto">
       {GROUPS.map(group => (
         <div key={group.label} className="flex items-center gap-1.5">
           <span className="text-xs text-ink-muted mr-1">{group.label}</span>
@@ -36,7 +36,7 @@ export function PlatformSwitcher({ selected, originalPlatform, onChange }: Props
               <button
                 key={platform}
                 onClick={() => onChange(platform)}
-                className={`relative px-3 py-1.5 rounded-full text-xs font-medium transition-all flex items-center gap-1.5 ${
+                className={`relative px-3 py-1.5 rounded-full text-xs font-medium transition-all flex items-center gap-1.5 whitespace-nowrap ${
                   isActive
                     ? PLATFORM_ACCENT[platform]
                     : isOriginal
@@ -55,7 +55,7 @@ export function PlatformSwitcher({ selected, originalPlatform, onChange }: Props
       ))}
 
       {selected !== originalPlatform && (
-        <span className="ml-auto text-xs text-ink-muted bg-cream-dark px-2 py-1 rounded">
+        <span className="ml-auto text-xs text-ink-muted bg-cream-dark px-2 py-1 rounded whitespace-nowrap hidden sm:inline">
           Originally {PLATFORM_LABELS[originalPlatform]}
         </span>
       )}

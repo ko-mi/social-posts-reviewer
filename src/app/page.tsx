@@ -61,7 +61,7 @@ export default function Home() {
       <div className="w-full max-w-xl text-center">
         {/* Title */}
         <div className="mb-10">
-          <h1 className="text-4xl font-display text-ink mb-3 italic">Get feedback on social posts before they go live</h1>
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-display text-ink mb-3 italic">Get feedback on social posts before they go live</h1>
           <p className="text-ink-light text-base">
             Share realistic previews with clients. Collect approvals and comments — straight to your spreadsheet.
           </p>
@@ -69,7 +69,7 @@ export default function Home() {
 
         {/* Connect form */}
         <form onSubmit={handleSubmit} className="mb-4">
-          <div className="flex gap-2">
+          <div className="flex flex-col sm:flex-row gap-2">
             <input
               type="text"
               value={sheetUrl}
@@ -82,7 +82,7 @@ export default function Home() {
             />
             <button
               type="submit"
-              className="px-6 py-3 bg-accent text-white rounded-xl text-sm font-semibold hover:bg-accent-hover transition-colors"
+              className="px-6 py-3 bg-accent text-white rounded-xl text-sm font-semibold hover:bg-accent-hover transition-colors whitespace-nowrap"
             >
               Preview
             </button>
@@ -98,7 +98,7 @@ export default function Home() {
         </p>
 
         {/* How it works */}
-        <div className="mt-14 text-left bg-white rounded-2xl p-8 border border-warm-gray">
+        <div className="mt-10 sm:mt-14 text-left bg-white rounded-2xl p-5 sm:p-8 border border-warm-gray">
           <h2 className="font-display text-xl text-ink mb-5 italic">How it works</h2>
           <div className="space-y-4">
             {[

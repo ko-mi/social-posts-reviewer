@@ -22,11 +22,13 @@ export const metadata: Metadata = {
     description: "Get feedback on social posts before they go live. Realistic previews, approvals, and comments — straight from a Google Sheet.",
     siteName: "Social Posts Previewer",
     type: "website",
+    images: [{ url: "/opengraph-image", width: 1200, height: 630 }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Social Posts Previewer",
     description: "Get feedback on social posts before they go live. Realistic previews, approvals, and comments — straight from a Google Sheet.",
+    images: ["/opengraph-image"],
   },
 };
 

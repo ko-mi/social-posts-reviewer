@@ -125,8 +125,12 @@ export default function Home() {
           </div>
         </div>
 
-        <p className="mt-8 text-xs text-ink-muted mb-8">
+        <p className="mt-8 text-xs text-ink-muted">
           Your data stays in Google Sheets. Nothing is stored on our servers.
+        </p>
+
+        <p className="mt-4 text-[10px] text-ink-muted/60 mb-8">
+          Made by <a href="https://michalina.dev" target="_blank" rel="noopener noreferrer" className="underline hover:text-ink-muted">michalina.dev</a>
         </p>
       </div>
     </main>

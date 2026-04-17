@@ -33,7 +33,7 @@ export function PostList({
   const campaigns = getCampaigns(groups);
 
   return (
-    <div className="w-72 border-r border-warm-gray bg-cream overflow-y-auto flex-shrink-0">
+    <div className="w-72 border-r border-warm-gray bg-cream overflow-y-auto flex-shrink-0 flex flex-col">
       <div className="p-4 border-b border-warm-gray">
         <h2 className="text-sm font-semibold text-ink-muted uppercase tracking-wider">Posts</h2>
       </div>
@@ -157,6 +157,12 @@ export function PostList({
           </div>
         );
       })}
+
+      <div className="mt-auto p-3 border-t border-warm-gray">
+        <p className="text-[10px] text-ink-muted/50 text-center">
+          Made by <a href="https://michalina.dev" target="_blank" rel="noopener noreferrer" className="underline hover:text-ink-muted">michalina.dev</a>
+        </p>
+      </div>
     </div>
   );
 }

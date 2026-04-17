@@ -40,36 +40,38 @@ class MemoryStore implements Store {
   }
 }
 
-class KVStore implements Store {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private kv: any;
+class RedisStore implements Store {
+  private redis: import('@upstash/redis').Redis;
 
   constructor() {
-    // Lazy require so the package isn't loaded if KV isn't configured
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const { kv } = require('@vercel/kv');
-    this.kv = kv;
+    const { Redis } = require('@upstash/redis') as typeof import('@upstash/redis');
+    this.redis = new Redis({
+      url: process.env.KV_REST_API_URL!,
+      token: process.env.KV_REST_API_TOKEN!,
+    });
   }
 
   async set(id: string, share: Share) {
-    await this.kv.set(`share:${id}`, share);
-    await this.kv.sadd(`shares:by:${share.createdByEmail}`, id);
+    await this.redis.set(`share:${id}`, JSON.stringify(share));
+    await this.redis.sadd(`shares:by:${share.createdByEmail}`, id);
   }
 
   async get(id: string) {
-    return (await this.kv.get(`share:${id}`)) as Share | null;
+    const data = await this.redis.get<string>(`share:${id}`);
+    if (!data) return null;
+    return (typeof data === 'string' ? JSON.parse(data) : data) as Share;
   }
 
   async delete(id: string) {
     const share = await this.get(id);
     if (share) {
-      await this.kv.srem(`shares:by:${share.createdByEmail}`, id);
+      await this.redis.srem(`shares:by:${share.createdByEmail}`, id);
     }
-    await this.kv.del(`share:${id}`);
+    await this.redis.del(`share:${id}`);
   }
 
   async list(email: string) {
-    const ids: string[] = await this.kv.smembers(`shares:by:${email}`);
+    const ids = await this.redis.smembers(`shares:by:${email}`);
     const shares = await Promise.all(
       ids.map(async (id) => ({ id, share: await this.get(id) }))
     );
@@ -82,12 +84,11 @@ let storeInstance: Store | null = null;
 export function getShareStore(): Store {
   if (storeInstance) return storeInstance;
 
-  if (process.env.KV_REST_API_URL || process.env.KV_URL) {
+  if (process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN) {
     try {
-      storeInstance = new KVStore();
-      console.log('[share-store] Using Vercel KV');
+      storeInstance = new RedisStore();
     } catch (err) {
-      console.warn('[share-store] KV configured but not available, falling back to memory:', err);
+      console.warn('[share-store] Redis not available, falling back to memory:', err);
       storeInstance = new MemoryStore();
     }
   } else {

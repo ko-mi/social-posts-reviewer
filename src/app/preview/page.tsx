@@ -3,7 +3,7 @@
 import { useSearchParams } from 'next/navigation';
 import { useState, useEffect, Suspense } from 'react';
 import { SocialPost } from '@/lib/types';
-import { fetchSheetData, extractSheetId, extractGid } from '@/lib/sheets';
+import { fetchSheetData, extractSheetId, extractGid, type ParsedComment } from '@/lib/sheets';
 import { SAMPLE_POSTS } from '@/lib/sample-data';
 import { Dashboard } from '@/components/Dashboard';
 
@@ -12,9 +12,11 @@ function PreviewContent() {
   const sheetParam = searchParams.get('sheet');
   const scriptParam = searchParams.get('script');
   const gidParam = searchParams.get('gid');
+  const shareParam = searchParams.get('share');
   const isDemo = searchParams.get('demo') === 'true' || !sheetParam;
 
   const [posts, setPosts] = useState<SocialPost[]>([]);
+  const [initialComments, setInitialComments] = useState<Record<string, ParsedComment[]>>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -32,12 +34,12 @@ function PreviewContent() {
       return;
     }
 
-    // Extract gid from the original URL or from explicit param
     const gid = gidParam || extractGid(sheetParam!) || undefined;
 
-    fetchSheetData(sheetId, gid)
+    fetchSheetData(sheetId, gid, shareParam ?? undefined)
       .then(data => {
-        setPosts(data);
+        setPosts(data.posts);
+        setInitialComments(data.commentsMap);
         setLoading(false);
       })
       .catch(err => {
@@ -77,7 +79,9 @@ function PreviewContent() {
 
   const sheetId = sheetParam ? extractSheetId(sheetParam) ?? undefined : undefined;
 
-  return <Dashboard posts={posts} sheetId={sheetId} scriptUrl={scriptParam ?? undefined} />;
+  const gid = gidParam || (sheetParam ? extractGid(sheetParam) : null) || undefined;
+
+  return <Dashboard posts={posts} sheetId={sheetId} gid={gid} scriptUrl={scriptParam ?? undefined} shareToken={shareParam ?? undefined} initialComments={initialComments} />;
 }
 
 export default function PreviewPage() {

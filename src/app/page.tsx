@@ -6,244 +6,127 @@ import { extractSheetId, extractGid } from '@/lib/sheets';
 
 export default function Home() {
   const [sheetUrl, setSheetUrl] = useState('');
-  const [scriptUrl, setScriptUrl] = useState('');
   const [error, setError] = useState('');
-  const [shareLink, setShareLink] = useState('');
-  const [copied, setCopied] = useState(false);
-  const [showSetup, setShowSetup] = useState(false);
+  const [user, setUser] = useState<{ name: string; picture: string } | null>(null);
   const router = useRouter();
 
-  const buildPreviewUrl = (sheetId: string, script?: string, gid?: string) => {
-    const base = typeof window !== 'undefined' ? window.location.origin : '';
-    let url = `${base}/preview?sheet=${sheetId}`;
-    if (gid) url += `&gid=${gid}`;
-    if (script) url += `&script=${encodeURIComponent(script)}`;
-    return url;
-  };
+  useState(() => {
+    fetch('/api/auth/me')
+      .then(res => res.json())
+      .then(data => { if (data.authenticated) setUser(data.user); })
+      .catch(() => {});
+  });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const sheetId = extractSheetId(sheetUrl);
     if (!sheetId) {
-      setError('Please enter a valid Google Sheet URL or ID');
+      setError('Please enter a valid Google Sheet URL');
       return;
     }
     const gid = extractGid(sheetUrl) || undefined;
-    const url = buildPreviewUrl(sheetId, scriptUrl || undefined, gid);
-    router.push(url.replace(window.location.origin, ''));
-  };
-
-  const handleGenerateLink = () => {
-    const sheetId = extractSheetId(sheetUrl);
-    if (!sheetId) {
-      setError('Please enter a valid Google Sheet URL or ID');
-      return;
-    }
-    const gid = extractGid(sheetUrl) || undefined;
-    setShareLink(buildPreviewUrl(sheetId, scriptUrl || undefined, gid));
-  };
-
-  const handleCopy = () => {
-    navigator.clipboard.writeText(shareLink);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    let url = `/preview?sheet=${sheetId}`;
+    if (gid) url += `&gid=${gid}`;
+    router.push(url);
   };
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-gray-50 to-white flex flex-col items-center justify-center px-4">
-      <div className="w-full max-w-lg text-center">
-        {/* Logo / Title */}
-        <div className="mb-8">
-          <div className="w-16 h-16 bg-indigo-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-indigo-200">
-            <svg className="w-8 h-8 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <rect x="3" y="3" width="18" height="18" rx="2" />
-              <path d="M3 9h18" />
-              <path d="M9 21V9" />
-            </svg>
+    <main className="min-h-screen bg-cream flex flex-col items-center justify-center px-4 relative">
+      {/* Auth — top right */}
+      <div className="absolute top-4 right-6">
+        {user ? (
+          <div className="flex items-center gap-2 text-sm text-ink-light">
+            {user.picture && (
+              <img src={user.picture} alt="" className="w-6 h-6 rounded-full" referrerPolicy="no-referrer" />
+            )}
+            <span>{user.name}</span>
+            <a href="/api/auth/logout" className="text-ink-muted hover:text-ink-light text-xs">Sign out</a>
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Social Posts Previewer</h1>
-          <p className="text-gray-500 text-lg">
-            Preview social media posts exactly as they&apos;ll appear.
-            <br />
-            <span className="text-base">Approve, comment, and send feedback — all from one place.</span>
+        ) : (
+          <a
+            href="/api/auth/login"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-warm-gray rounded-lg text-sm font-medium text-ink hover:bg-cream-dark transition-colors"
+          >
+            <svg className="w-4 h-4" viewBox="0 0 24 24">
+              <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/>
+              <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+              <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+              <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+            </svg>
+            Sign in
+          </a>
+        )}
+      </div>
+
+      <div className="w-full max-w-xl text-center">
+        {/* Title */}
+        <div className="mb-10">
+          <h1 className="text-4xl font-display text-ink mb-3 italic">Get feedback on social posts before they go live</h1>
+          <p className="text-ink-light text-base">
+            Share realistic previews with clients. Collect approvals and comments — straight to your spreadsheet.
           </p>
         </div>
 
-        {/* Mode toggle */}
-        <div className="flex gap-2 mb-6 bg-gray-100 rounded-xl p-1">
-          <button
-            onClick={() => setShowSetup(false)}
-            className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors ${
-              !showSetup ? 'bg-white shadow-sm text-gray-900' : 'text-gray-500 hover:text-gray-700'
-            }`}
-          >
-            I&apos;m a Client
-          </button>
-          <button
-            onClick={() => setShowSetup(true)}
-            className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors ${
-              showSetup ? 'bg-white shadow-sm text-gray-900' : 'text-gray-500 hover:text-gray-700'
-            }`}
-          >
-            I&apos;m a Contractor
-          </button>
+        {/* Connect form */}
+        <form onSubmit={handleSubmit} className="mb-4">
+          <div className="flex gap-2">
+            <input
+              type="text"
+              value={sheetUrl}
+              onChange={e => {
+                setSheetUrl(e.target.value);
+                setError('');
+              }}
+              placeholder="Paste Google Sheet URL..."
+              className="flex-1 px-4 py-3 bg-white border border-warm-gray rounded-xl text-sm text-ink focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
+            />
+            <button
+              type="submit"
+              className="px-6 py-3 bg-accent text-white rounded-xl text-sm font-semibold hover:bg-accent-hover transition-colors"
+            >
+              Preview
+            </button>
+          </div>
+          {error && (
+            <p className="mt-2 text-sm text-red-600 text-left">{error}</p>
+          )}
+        </form>
+
+        <p className="text-xs text-ink-muted">
+          Don&apos;t have a sheet yet?{' '}
+          <a href="/social-posts-template.csv" download="social-posts-template.csv" className="text-accent hover:text-accent-hover underline">Download the template</a> to get started.
+        </p>
+
+        {/* How it works */}
+        <div className="mt-14 text-left bg-white rounded-2xl p-8 border border-warm-gray">
+          <h2 className="font-display text-xl text-ink mb-5 italic">How it works</h2>
+          <div className="space-y-4">
+            {[
+              { step: '1', title: 'Download the template', desc: 'Import it into Google Sheets, fill in your posts.' },
+              { step: '2', title: 'Sign in with Google', desc: 'So the app can read your sheet and sync feedback.' },
+              { step: '3', title: 'Paste your sheet URL', desc: 'Preview how posts look across platforms.' },
+              { step: '4', title: 'Share with your client', desc: 'One click generates a review link — no sign-in needed for them.' },
+              { step: '5', title: 'Client reviews, you see it in your sheet', desc: 'Approvals and comments land right in the spreadsheet.' },
+            ].map(item => (
+              <div key={item.step} className="flex gap-3">
+                <span className="w-6 h-6 bg-accent-light text-accent rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">
+                  {item.step}
+                </span>
+                <div>
+                  <p className="text-sm font-medium text-ink">{item.title}</p>
+                  <p className="text-xs text-ink-muted">{item.desc}</p>
+                </div>
+              </div>
+            ))}
+            <p className="text-xs text-ink-muted mt-4 pt-4 border-t border-warm-gray">
+              Want to see it in action first?{' '}
+              <button onClick={() => router.push('/preview?demo=true')} className="text-accent hover:text-accent-hover underline">Try with sample data</button>
+            </p>
+          </div>
         </div>
 
-        {!showSetup ? (
-          <>
-            {/* Client view — just paste the link */}
-            <form onSubmit={handleSubmit} className="mb-6">
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  value={sheetUrl}
-                  onChange={e => {
-                    setSheetUrl(e.target.value);
-                    setError('');
-                  }}
-                  placeholder="Paste the review link or Sheet URL..."
-                  className="flex-1 px-4 py-3 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent shadow-sm"
-                />
-                <button
-                  type="submit"
-                  className="px-6 py-3 bg-indigo-500 text-white rounded-xl text-sm font-semibold hover:bg-indigo-600 transition-colors shadow-sm"
-                >
-                  Preview
-                </button>
-              </div>
-              {error && (
-                <p className="mt-2 text-sm text-red-500 text-left">{error}</p>
-              )}
-            </form>
-
-            {/* Divider */}
-            <div className="flex items-center gap-4 mb-6">
-              <div className="flex-1 border-t border-gray-200" />
-              <span className="text-xs text-gray-400 uppercase tracking-wider">or</span>
-              <div className="flex-1 border-t border-gray-200" />
-            </div>
-
-            {/* Demo button */}
-            <button
-              onClick={() => router.push('/preview?demo=true')}
-              className="w-full px-6 py-3 bg-white border border-gray-200 rounded-xl text-sm font-medium text-gray-700 hover:bg-gray-50 hover:border-gray-300 transition-colors shadow-sm"
-            >
-              Try with sample data
-            </button>
-          </>
-        ) : (
-          <>
-            {/* Contractor view — setup + generate shareable link */}
-            <div className="text-left space-y-4 mb-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                  Google Sheet URL
-                </label>
-                <input
-                  type="text"
-                  value={sheetUrl}
-                  onChange={e => {
-                    setSheetUrl(e.target.value);
-                    setError('');
-                    setShareLink('');
-                  }}
-                  placeholder="https://docs.google.com/spreadsheets/d/..."
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent shadow-sm"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                  Apps Script URL <span className="text-gray-400 font-normal">(for feedback write-back)</span>
-                </label>
-                <input
-                  type="text"
-                  value={scriptUrl}
-                  onChange={e => {
-                    setScriptUrl(e.target.value);
-                    setShareLink('');
-                  }}
-                  placeholder="https://script.google.com/macros/s/.../exec"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent shadow-sm"
-                />
-                <p className="mt-1 text-xs text-gray-400">
-                  Deploy the Apps Script once — client feedback will sync back to your sheet.
-                </p>
-              </div>
-
-              {error && (
-                <p className="text-sm text-red-500">{error}</p>
-              )}
-
-              <div className="flex gap-2">
-                <button
-                  onClick={handleGenerateLink}
-                  className="flex-1 px-6 py-3 bg-indigo-500 text-white rounded-xl text-sm font-semibold hover:bg-indigo-600 transition-colors shadow-sm"
-                >
-                  Generate Client Link
-                </button>
-                <button
-                  onClick={handleSubmit as () => void}
-                  className="px-6 py-3 bg-white border border-gray-200 rounded-xl text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors shadow-sm"
-                >
-                  Preview
-                </button>
-              </div>
-
-              {/* Shareable link output */}
-              {shareLink && (
-                <div className="bg-green-50 border border-green-200 rounded-xl p-4">
-                  <p className="text-xs font-medium text-green-800 mb-2">
-                    Share this link with your client:
-                  </p>
-                  <div className="flex gap-2">
-                    <input
-                      type="text"
-                      readOnly
-                      value={shareLink}
-                      className="flex-1 px-3 py-2 bg-white border border-green-200 rounded-lg text-xs text-gray-700 font-mono"
-                    />
-                    <button
-                      onClick={handleCopy}
-                      className="px-4 py-2 bg-green-600 text-white rounded-lg text-xs font-medium hover:bg-green-700 transition-colors"
-                    >
-                      {copied ? 'Copied!' : 'Copy'}
-                    </button>
-                  </div>
-                  <p className="text-xs text-green-600 mt-2">
-                    This link is reusable — send it to any client reviewing these posts.
-                  </p>
-                </div>
-              )}
-            </div>
-
-            {/* Setup instructions */}
-            <div className="text-left bg-gray-50 rounded-xl p-6 border border-gray-100">
-              <h2 className="text-sm font-semibold text-gray-900 mb-4">One-time setup</h2>
-              <div className="space-y-3">
-                {[
-                  { step: '1', title: 'Create your sheet from the template', desc: 'Columns: Post ID, Campaign, Platform, Variant, Post Text, Image URL, Link URL, Scheduled Date, Status, Approved, Client Comment, Reviewed At' },
-                  { step: '2', title: 'Publish to web', desc: 'File \u2192 Share \u2192 Publish to web \u2192 Publish (as Web page)' },
-                  { step: '3', title: 'Deploy the Apps Script', desc: 'Extensions \u2192 Apps Script \u2192 paste the template code \u2192 Deploy as Web app (Anyone)' },
-                  { step: '4', title: 'Generate & share the link', desc: 'Paste both URLs above, generate the client link, and send it. Done!' },
-                ].map(item => (
-                  <div key={item.step} className="flex gap-3">
-                    <span className="w-6 h-6 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">
-                      {item.step}
-                    </span>
-                    <div>
-                      <p className="text-sm font-medium text-gray-900">{item.title}</p>
-                      <p className="text-xs text-gray-500">{item.desc}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </>
-        )}
-
-        <p className="mt-8 text-xs text-gray-400 mb-8">
-          Posts are read directly from your Google Sheet. No data is stored on our servers.
+        <p className="mt-8 text-xs text-ink-muted mb-8">
+          Your data stays in Google Sheets. Nothing is stored on our servers.
         </p>
       </div>
     </main>

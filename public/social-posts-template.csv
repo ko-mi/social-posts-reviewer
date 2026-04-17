@@ -1,0 +1,12 @@
+Post ID,Campaign,Platform,Variant,Post Text,Headline,Description,CTA Text,Image URL,Link URL,Scheduled Date,Status,Approved,Client Comment,Reviewed At
+POST-001,Example Campaign,LinkedIn Ad,A,"Your ad copy goes here.",Ad Headline Here,Short description under headline,Learn More,,https://example.com,2025-05-01,Ready for Review,,,
+POST-001,Example Campaign,LinkedIn Ad,B,"Variant B of the same ad.",Alternative Headline,Alternative description,Sign Up,,https://example.com,2025-05-01,Ready for Review,,,
+POST-002,Example Campaign,Google Ad,A,"Search ad description text goes here. Keep it concise and compelling.",Headline 1 | Headline 2 | Headline 3,Short description for search results,,,https://www.example.com/landing,2025-05-01,Ready for Review,,,
+POST-003,Example Campaign,LinkedIn,A,"Organic LinkedIn post copy goes here. Longer form content works well on LinkedIn.
+
+Use line breaks for readability.
+
+#Hashtags #GoHere",,,,,,2025-05-01,Ready for Review,,,
+POST-004,Example Campaign,Twitter,A,"Short and punchy tweet copy. Keep it under 280 characters.",,,,,,2025-05-01,Ready for Review,,,
+POST-005,Example Campaign,Facebook,A,"Facebook post copy. Can be longer and more conversational.",,,,,,2025-05-01,Ready for Review,,,
+POST-006,Example Campaign,Instagram,A,"Instagram caption. Use emojis and hashtags freely.",,,,,,2025-05-01,Ready for Review,,,

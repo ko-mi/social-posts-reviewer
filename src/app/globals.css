@@ -1,9 +1,24 @@
 @import "tailwindcss";
 
 @theme inline {
-  --color-background: #ffffff;
-  --color-foreground: #171717;
-  --font-sans: var(--font-inter), system-ui, -apple-system, sans-serif;
+  --color-background: #faf8f6;
+  --color-foreground: #2a2523;
+  --color-cream: #faf8f6;
+  --color-cream-dark: #f2eeea;
+  --color-warm-gray: #e0dbd6;
+  --color-accent: #0f3d26;
+  --color-accent-hover: #0a2e1c;
+  --color-accent-light: #e4ede8;
+  --color-approve: #3a7d5c;
+  --color-approve-light: #ecf4ef;
+  --color-reject: #c0463a;
+  --color-reject-light: #fdf0ee;
+  --color-ink: #2a2523;
+  --color-ink-light: #5c5450;
+  --color-ink-muted: #9a918b;
+  --color-preview-bg: #f0ece8;
+  --font-body: var(--font-dm-sans), system-ui, -apple-system, sans-serif;
+  --font-display: var(--font-instrument-serif), Georgia, "Times New Roman", serif;
 }
 
 body {
@@ -11,7 +26,6 @@ body {
   color: var(--color-foreground);
 }
 
-/* Smooth transitions for approval buttons */
 @keyframes fade-in {
   from { opacity: 0; transform: translateY(-4px); }
   to { opacity: 1; transform: translateY(0); }
@@ -21,7 +35,6 @@ body {
   animation: fade-in 0.2s ease-out;
 }
 
-/* Custom scrollbar for post list */
 .overflow-y-auto::-webkit-scrollbar {
   width: 6px;
 }
@@ -29,9 +42,9 @@ body {
   background: transparent;
 }
 .overflow-y-auto::-webkit-scrollbar-thumb {
-  background: #d1d5db;
+  background: var(--color-warm-gray);
   border-radius: 3px;
 }
 .overflow-y-auto::-webkit-scrollbar-thumb:hover {
-  background: #9ca3af;
+  background: var(--color-ink-muted);
 }

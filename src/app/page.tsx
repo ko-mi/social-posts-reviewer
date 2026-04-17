@@ -120,7 +120,7 @@ export default function Home() {
             ))}
             <p className="text-xs text-ink-muted mt-4 pt-4 border-t border-warm-gray">
               Want to see it in action first?{' '}
-              <button onClick={() => router.push('/preview?demo=true')} className="text-accent hover:text-accent-hover underline">Try with sample data</button>
+              <button onClick={() => router.push('/preview?demo=true')} className="text-accent hover:text-accent-hover underline cursor-pointer">Try with sample data</button>
             </p>
           </div>
         </div>

@@ -28,9 +28,12 @@ export function FeedbackPanel({
 
   if (!post) return null;
 
+  const isDemo = !sheetId;
+  const canInteract = isAuthenticated || isDemo;
   const status = currentFeedback?.approved ?? post.approved;
 
   const getUserName = (): string => {
+    if (isDemo) return 'You';
     if (shareToken) return clientName || 'Anonymous';
     if (typeof document === 'undefined') return 'You';
     const match = document.cookie.match(/google_user=([^;]+)/);
@@ -144,8 +147,8 @@ export function FeedbackPanel({
           <textarea
             value={comment}
             onChange={e => setComment(e.target.value)}
-            placeholder={isAuthenticated ? 'Leave feedback...' : 'Sign in to comment'}
-            disabled={!isAuthenticated}
+            placeholder={canInteract ? 'Leave feedback...' : 'Sign in to comment'}
+            disabled={!canInteract}
             rows={3}
             className="flex-1 px-3 py-2 border border-warm-gray rounded-lg text-sm resize-none focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent disabled:opacity-50 disabled:cursor-not-allowed"
             onKeyDown={e => {
@@ -160,7 +163,7 @@ export function FeedbackPanel({
           <p className="text-[10px] text-ink-muted">Enter to send</p>
           <button
             onClick={handleSubmitComment}
-            disabled={!comment.trim() || !isAuthenticated}
+            disabled={!comment.trim() || !canInteract}
             className="px-3 py-1 bg-accent text-white rounded-md text-xs font-medium hover:bg-accent-hover transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
           >
             Send

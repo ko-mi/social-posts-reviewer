@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { DM_Sans, Instrument_Serif } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
 const dmSans = DM_Sans({
@@ -39,7 +40,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${dmSans.variable} ${instrumentSerif.variable} h-full`}>
-      <body className="min-h-full flex flex-col font-body antialiased">{children}</body>
+      <body className="min-h-full flex flex-col font-body antialiased">
+        {children}
+        <Analytics />
+      </body>
     </html>
   );
 }
